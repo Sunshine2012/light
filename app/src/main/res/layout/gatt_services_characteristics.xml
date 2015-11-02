@@ -99,6 +99,68 @@
     </LinearLayout>
     <!--  -->
     <LinearLayout android:orientation="horizontal"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_margin="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="冷色"
+            android:textSize="24sp"
+            android:textColor="#0000ff"
+            android:id="@+id/cool"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            />
+        <SeekBar
+            android:id="@+id/seekBarCoolWarm"
+            android:layout_width="15dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cool"
+            android:layout_weight="15"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="暖色"
+            android:textSize="24sp"
+            android:textColor="#ff0000"
+            android:id="@+id/warm"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            />
+    </LinearLayout>
+    <LinearLayout android:orientation="horizontal"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_margin="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="暗    "
+            android:textSize="24sp"
+            android:textColor="#0000ff"
+            android:id="@+id/duck"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+
+            />
+        <SeekBar
+            android:id="@+id/seekBarDuckLight"
+            android:layout_width="15dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="15"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="    亮"
+            android:textSize="24sp"
+            android:textColor="#ff0000"
+            android:id="@+id/light"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            />
+    </LinearLayout>
+    <LinearLayout android:orientation="horizontal"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:layout_margin="10dp">

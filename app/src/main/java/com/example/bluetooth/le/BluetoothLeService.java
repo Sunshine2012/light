@@ -30,6 +30,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.util.Log;
 
 import java.util.List;
@@ -293,12 +294,35 @@ public class BluetoothLeService extends Service
         mBluetoothGatt.readCharacteristic(characteristic);
     }
 
-
+/*
     public void writeCharacteristic(BluetoothGattCharacteristic mWriteCaracteristic,String data)
     {
         //Log.e("UUID",mWriteCaracteristic.getUuid().toString());
         byte[] values = data.getBytes();
+
         mWriteCaracteristic.setValue(values);
+        for (int i = 0; i < values.length; i++)
+        {
+            Log.e("value"+String.format("%d",i),String.format("%d",values[i]));
+        }
+        mBluetoothGatt.writeCharacteristic(mWriteCaracteristic);
+    }
+    */
+    public void writeCharacteristic(BluetoothGattCharacteristic mWriteCaracteristic,byte[] data)
+    {
+        //Log.e("UUID",mWriteCaracteristic.getUuid().toString());
+       // byte[] values = data.getBytes();
+       // for (int i = 0; i < values.length; i++)
+       // {
+       //     Log.e("value"+String.format("%d",i),String.format("%d",values[i]));
+       // }
+
+        mWriteCaracteristic.setValue(data);
+        for (int i = 0; i < data.length; i++)
+        {
+            Log.e("data"+String.format("%d",i),String.format("%d",data[i]));
+        }
+        Log.e("mWriteCaracteristic",mWriteCaracteristic.getUuid().toString());
         mBluetoothGatt.writeCharacteristic(mWriteCaracteristic);
     }
 
@@ -312,7 +336,8 @@ public class BluetoothLeService extends Service
      */
     public void setCharacteristicNotification(BluetoothGattCharacteristic characteristic,
                                               boolean enabled) {
-        if (mBluetoothAdapter == null || mBluetoothGatt == null) {
+        if (mBluetoothAdapter == null || mBluetoothGatt == null)
+        {
             Log.w(TAG, "BluetoothAdapter not initialized");
             return;
         }

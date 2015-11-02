@@ -42,8 +42,7 @@ public class SampleGattAttributes {
         attributes.put("0000180a-0000-1000-8000-00805f9b34fb", "Device Information Service");
         attributes.put("0000180f-0000-1000-8000-00805f9b34fb", "Battery Service");
         attributes.put("edfec62e-9910-0abc-5241-d8bda6932a2f", "用户服务");
-        // Sample Characteristics.
-        attributes.put(HEART_RATE_MEASUREMENT, "Heart Rate Measurement");
+
         attributes.put("00002a29-0000-1000-8000-00805f9b34fb", "Manufacturer Name String");
 
         attributes.put(WECHAT_SERVICE_UUID,"微信服务");
