@@ -185,13 +185,16 @@ public class DeviceControlActivity extends Activity
         //mGattServicesList.setVisibility(View.INVISIBLE);
         button_send_value = (Button) findViewById(R.id.button_send_value);
         edittext_input_value = (EditText) findViewById(R.id.edittext_input_value);
-        textview_return_result = (TextView) findViewById(R.id.textview_return_result);
+
+
+        button_send_value.setVisibility(View.INVISIBLE);
+        edittext_input_value.setVisibility(View.INVISIBLE);
 
         mSeekBarCoolWarm = (SeekBar) findViewById(R.id.seekBarCoolWarm);
         mSeekBarDuckLight = (SeekBar) findViewById(R.id.seekBarDuckLight);
-        mSeekBarCoolWarm.setMax(100);
+        mSeekBarCoolWarm.setMax(64);
         mSeekBarDuckLight.setMax(100);
-        mSeekBarCoolWarm.setProgress(50);
+        mSeekBarCoolWarm.setProgress(32);
         mSeekBarDuckLight.setProgress(50);
 
         getActionBar().setTitle(mDeviceName);
@@ -208,43 +211,31 @@ public class DeviceControlActivity extends Activity
             {
                 byte[] data;
                 final UUID WECHAT_SERVER_TX_UUID = UUID.fromString(SampleGattAttributes.WECHAT_SERVER_TX_UUID);
-                //String DSPS = "0783b03e-8535-7140-a304d2495cba";
-                //String strWECHAT_SERVER_TX_UUID = "0000fec7-0000-1000-8000-00805f9b34fb";
-                //Log.e("WECHATUUID", WECHAT_SERVER_TX_UUID.toString());
-                //for (int i = 0;i < mGattCharacteristics.size();i++)
-                //for (int j = 0; j < 2;j++)
+                //String send = this.toStringHex(sendStr);
+                String sendStr = edittext_input_value.getText().toString();
+                //data = sendStr.getBytes();
+                data = edittext_input_value.getText().toString().getBytes();
+                if (0 == data.length)
                 {
-                    //String send = this.toStringHex(sendStr);
-                    String sendStr = edittext_input_value.getText().toString();
-                    //data = sendStr.getBytes();
-                    data = edittext_input_value.getText().toString().getBytes();
-                    if (0 == data.length)
-                    {
-                        Toast.makeText(DeviceControlActivity.this, "没有数据要发送", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    // Hex方式发送数据
-                    for (int i = 0; i < data.length; i++)
-                    {
-                        int temp = data[i] - 48;
-                        data[i] = (byte) temp;
-                    }
+                    Toast.makeText(DeviceControlActivity.this, "没有数据要发送", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                // Hex方式发送数据
+                for (int i = 0; i < data.length; i++)
+                {
+                    int temp = data[i] - 48;
+                    data[i] = (byte) temp;
+                }
 
-                    List<BluetoothGattCharacteristic> gattCharacteristics = mGattCharacteristics.get(mGattCharacteristics.size() - 1);
-                    for (BluetoothGattCharacteristic characteristic : gattCharacteristics)
+                List<BluetoothGattCharacteristic> gattCharacteristics = mGattCharacteristics.get(mGattCharacteristics.size() - 1);
+                for (BluetoothGattCharacteristic characteristic : gattCharacteristics)
+                {
+                    //Log.e("UID", characteristic.getUuid().toString());
+                    //Log.e("WECHAT_SERVER_TX_UUID", SampleGattAttributes.WECHAT_SERVER_TX_UUID);
+                    if (characteristic.getUuid().equals(WECHAT_SERVER_TX_UUID))
                     {
-                        //Log.e("UID", characteristic.getUuid().toString());
-                        //Log.e("WECHAT_SERVER_TX_UUID", SampleGattAttributes.WECHAT_SERVER_TX_UUID);
-                        //Toast.makeText(DeviceControlActivity.this, "UUID" +characteristic.getUuid().toString(), Toast.LENGTH_SHORT).show();
-                        //Toast.makeText(DeviceControlActivity.this, "WECHAT" +SampleGattAttributes.WECHAT_SERVER_TX_UUID, Toast.LENGTH_SHORT).show();
-                        //if(SampleGattAttributes.WECHAT_SERVER_TX_UUID ==(characteristic.getUuid().toString()))
-                        {
-                            // Log.e("UID", characteristic.getUuid().toString());
-                            //Toast.makeText(DeviceControlActivity.this, "发送数据" + String.format("%d",data[0]), Toast.LENGTH_SHORT).show();
-                            //mBluetoothLeService.writeCharacteristic(characteristic, sendStr);
-                            mBluetoothLeService.writeCharacteristic(characteristic, data);
-                            return;
-                        }
+                        mBluetoothLeService.writeCharacteristic(characteristic, data);
+                        return;
                     }
                 }
 
@@ -258,43 +249,32 @@ public class DeviceControlActivity extends Activity
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b)
             {
-                         // 设置“与系统默认SeekBar对应的TextView”的值
-                        //mTvDef.setText(getResources().getString(R.string.text_def)+" : "+String.valueOf(seekBar.getProgress()));
-                        byte[] data = {0,1};
-                        final UUID WECHAT_SERVER_TX_UUID = UUID.fromString(SampleGattAttributes.WECHAT_SERVER_TX_UUID);
-                        //String DSPS = "0783b03e-8535-7140-a304d2495cba";
-                        //String strWECHAT_SERVER_TX_UUID = "0000fec7-0000-1000-8000-00805f9b34fb";
-                        //Log.e("WECHATUUID", WECHAT_SERVER_TX_UUID.toString());
-                        //for (int i = 0;i < mGattCharacteristics.size();i++)
-                        //for (int j = 0; j < 2;j++)
-                        {
+                byte[] data = {0, 1};
+                final UUID WECHAT_SERVER_TX_UUID = UUID.fromString(SampleGattAttributes.WECHAT_SERVER_TX_UUID);
 
-                           if (0 < mSeekBarCoolWarm.getProgress() && mSeekBarCoolWarm.getProgress() <= 50)
-                           {
-                               data[0] = 0x02;
-                           }
-                            else
-                           {
-                               data[0] = 0x01;
-                           }
+                data[0] = (byte) mSeekBarCoolWarm.getProgress();
 
-                            List<BluetoothGattCharacteristic> gattCharacteristics = mGattCharacteristics.get(mGattCharacteristics.size() - 1);
-                            for (BluetoothGattCharacteristic characteristic : gattCharacteristics)
-                            {
-                                //Log.e("UID", characteristic.getUuid().toString());
-                                //Log.e("WECHAT_SERVER_TX_UUID", SampleGattAttributes.WECHAT_SERVER_TX_UUID);
-                                //Toast.makeText(DeviceControlActivity.this, "UUID" +characteristic.getUuid().toString(), Toast.LENGTH_SHORT).show();
-                                //Toast.makeText(DeviceControlActivity.this, "WECHAT" +SampleGattAttributes.WECHAT_SERVER_TX_UUID, Toast.LENGTH_SHORT).show();
-                                //if(SampleGattAttributes.WECHAT_SERVER_TX_UUID ==(characteristic.getUuid().toString()))
-                                {
-                                    // Log.e("UID", characteristic.getUuid().toString());
-                                    //Toast.makeText(DeviceControlActivity.this, "发送数据" + String.format("%d",data[0]), Toast.LENGTH_SHORT).show();
-                                    //mBluetoothLeService.writeCharacteristic(characteristic, sendStr);
-                                    mBluetoothLeService.writeCharacteristic(characteristic, data);
-                                    return;
-                                }
-                            }
-                        }
+                List<BluetoothGattCharacteristic> gattCharacteristics = mGattCharacteristics.get(mGattCharacteristics.size() - 1);
+
+                for (BluetoothGattCharacteristic characteristic : gattCharacteristics)
+                {
+                    //Log.e("UID", characteristic.getUuid().toString());
+                    //Log.e("WECHAT_SERVER_TX_UUID", SampleGattAttributes.WECHAT_SERVER_TX_UUID);
+
+                    if (characteristic.getUuid().equals(WECHAT_SERVER_TX_UUID))
+                    {
+
+                        //BluetoothLeService myBluetoothLeService = new BluetoothLeService();
+                        //if(myBluetoothLeService.mConnectionState  != BluetoothLeService.STATE_CONNECTED)
+                        //{
+                        //    Toast.makeText(DeviceControlActivity.this, "请连接BLE", Toast.LENGTH_SHORT).show();
+                        //    return;
+                        // }
+                        mBluetoothLeService.writeCharacteristic(characteristic, data);
+                        return;
+                    }
+                }
+
             }
 
             @Override
@@ -432,7 +412,8 @@ public class DeviceControlActivity extends Activity
                 new String[] {LIST_NAME, LIST_UUID},
                 new int[] { android.R.id.text1, android.R.id.text2 }
         );
-        mGattServicesList.setAdapter(gattServiceAdapter);
+        // aiwesky 20151103注释显示属性列表
+        //mGattServicesList.setAdapter(gattServiceAdapter);
     }
 
     private static IntentFilter makeGattUpdateIntentFilter() {
